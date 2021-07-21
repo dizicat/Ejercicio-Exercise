@@ -1,0 +1,184 @@
+//Archivo .cpp Hecho en Dev c++
+#include<iostream>
+#include<stdlib.h>
+#include<math.h>
+#include<stdio.h>
+using namespace std;
+
+#include "pilaLista.hpp"
+
+
+main()
+{
+	int op,x=0,total;
+	float nuevo,extraido,suma;
+	tpila P;
+	tpila Q;
+	iniciar_lista(P);
+	iniciar_lista(Q);
+	do{
+		system("cls");
+		cout<<"****MENU****"<<endl;
+		cout<<"1-Agregar elemento a la pila P:"<<endl;
+		cout<<"2-Quitar elemento de la pila y almacenar en a pila Q:"<<endl;
+		cout<<"3-Consultar tope:"<<endl;
+		cout<<"4-Salir:"<<endl;
+		cout<<"Ingrese una opcion:"<<endl;
+		cin>>op;
+		switch(op)
+		{
+			case 1: cout<<"Ingrese el valor que desea agregar:";
+					cin>>nuevo;
+					if(nuevo==1 || nuevo==0)
+					{				
+						apilar(P,nuevo);						
+					}
+					break;
+			case 2:	if(vacia(P)!=true)
+						{	desapilar(P,extraido);
+							cout<<"Valor eliminado:"<<extraido<<endl;	
+							//extraido=extraido;
+							
+							extraido*=pow(2,x);
+							cout<<"valor a almacenar en Q: "<<extraido<<endl;
+							
+							apilar(Q,extraido);
+							x++;
+							cout<<"x: "<<x<<endl;
+							suma+=extraido;
+							cout<<"suma: "<<suma<<endl;
+						}			
+					else
+						cout<<"pila vacia"<<endl;
+					break;
+					
+			case 3:	
+					if(vacia(P)!=true)
+					{
+						cout<<"Valor en la cima de la pila:"<<verTope(P)<<endl;
+						
+					}
+					else
+						cout<<"PILA VACIA"<<endl;
+						break;
+			case 4:	cout<<"FIN DEL PROGRAMA"<<endl;
+					vacia(P);			
+				break;			
+			default: cout<<"ERROR DE OPCION"<<endl;		
+		}
+		system("pause");
+	}while(op!=4);
+}
+
+//Archivo .hpp
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+//definicion de la estructura
+const int MAX=6;
+typedef struct tnodo *pnodo;
+typedef struct tnodo{
+						float dato;
+						pnodo ant;
+						pnodo sig;
+					};
+typedef struct tpila{
+				pnodo inicio;
+				int cantidad;
+			};
+//prototipos de funciones y procedimientos
+
+void iniciar_lista(tpila &lis)
+{
+	lis.cantidad=0;
+	lis.inicio=NULL;
+}
+
+void crear_nodo(pnodo &nuevo, int valor)
+{
+	nuevo=new tnodo;
+	if(nuevo!=NULL)
+	{
+		nuevo->dato=valor;
+		nuevo->ant=NULL;
+		nuevo->sig=NULL;	
+	}	
+	else
+		cout<<"no hay espacio de memoria"<<endl;
+}	
+bool vacia(tpila lis)
+{
+	if(lis.cantidad==0)
+		return true;
+	else
+		return false;		
+}		
+bool llena(tpila lis){
+	return(lis.cantidad==MAX);
+}
+void apilar(tpila &lis, int valor)
+{
+	pnodo nuevo; 
+	if(llena(lis)==true)
+		cout<<"pila llena"<<endl;
+	else{	
+			
+		crear_nodo(nuevo,valor);
+		if(lis.cantidad==0)		//lis.inicio==NULL
+		{
+			lis.inicio=nuevo;
+			lis.cantidad++;
+		}
+		else
+		{
+			nuevo->sig=lis.inicio;
+			lis.inicio->ant=nuevo;
+			lis.inicio=nuevo;
+			lis.cantidad++;
+		}
+	}	
+	
+}
+void desapilar(tpila &lis,float &valor)
+{
+	pnodo aux,p;
+//	int valor=0;
+	if(vacia(lis)==true)
+		cout<<"pila vacia"<<endl;	
+	else
+	{
+		if(lis.cantidad==1)
+		{
+			aux=lis.inicio;
+			lis.inicio=NULL;	
+		}
+		else
+		{
+			aux=lis.inicio;
+			lis.inicio=lis.inicio->sig;
+			lis.inicio->ant=NULL;
+			
+		} 
+		lis.cantidad--;
+		valor=aux->dato;
+	}	
+	delete(aux);
+//	return valor;	
+}
+float verTope(tpila p)
+{
+	if(p.cantidad!=0)
+		return p.inicio->dato;
+}
+
+/**/
+/*
+float primero(tpila p)
+{
+	if(p.inicio->dato != 1)
+	{
+		//cout<<p.inicio<<endl;
+		return p.inicio->dato;
+	}
+}
+*/
